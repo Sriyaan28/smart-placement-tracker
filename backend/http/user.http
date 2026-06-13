@@ -1,0 +1,5 @@
+### GET PROFILE
+GET http://localhost:4000/api/user/profile
+
+### GET ALL USER'S PROFILES
+GET http://localhost:4000/api/user/users

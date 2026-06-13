@@ -1,0 +1,48 @@
+import { UserModel } from "../../models/UserModel.js";
+
+// CONTROLLER TO GET USER PROFILE
+export const getProfileController = async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Session expired, Please login again" })
+        }
+        // find user in db
+        const profile = await UserModel.findById(user.id).select("-password")
+        if (!profile) {
+            return res.status(404).json({ success: false, message: "User not found" })
+        }
+        // check if user is active
+        if (!profile.isActive) {
+            return res.status(403).json({ success: false, message: "Account is inactive, Contact ADMIN for more information" })
+        }
+        // send response
+        return res.status(200).json({ success: true, payload: profile })
+    }
+    catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to fetch profile", error: err.message })
+    }
+}
+
+// CONTROLLER TO GET ALL USER'S PROFILES
+export const getAllProfilesController = async (req, res) => {
+    try {
+        // get all users from db (non-admin)
+        const users = await UserModel.find({ role: { $ne: "ADMIN" } }).select("-password")
+
+        // sort users based on their role
+        const students = users.filter((user) => user.role === "STUDENT")
+        const mentors = users.filter((user) => user.role === "MENTOR")
+        const companies = users.filter((user) => user.role === "COMPANY")
+
+        // check if users exists
+        if (!users) {
+            return res.status(404).json({ success: false, message: "No users found" })
+        }
+        // send response
+        return res.status(200).json({ success: true, payload: { students, mentors, companies } })
+    }
+    catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to fetch users", error: err.message })
+    }
+}

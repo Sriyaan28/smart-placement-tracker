@@ -1,0 +1,26 @@
+### REGISTER
+POST http://localhost:4000/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Ram",
+    "email": "student1@gmail.com",
+    "number": "9999999990",
+    "password": "student1",
+    "role": "STUDENT"
+}
+
+### LOGIN
+POST http://localhost:4000/api/auth/login
+Content-Type: application/json
+
+{
+    "email":"admin1@gmail.com",
+    "password": "admin1"
+}
+
+### LOGOUT
+GET http://localhost:4000/api/auth/logout
+
+### GET ME
+GET http://localhost:4000/api/auth/me
