@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Login } from '../components/auth/Login';
 import { Register } from '../components/auth/Register';
 
@@ -24,12 +24,12 @@ export const AuthPage = () => {
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 font-sans selection:bg-emerald-500/30">
       
-      <a href="/" className="absolute top-8 left-8 text-white font-bold text-xl flex items-center gap-2 hover:opacity-80 transition-opacity">
+      <Link to="/" className="absolute top-8 left-8 text-white font-bold text-xl flex items-center gap-2 hover:opacity-80 transition-opacity">
         <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
           <div className="w-2 h-2 bg-black rounded-full" />
         </div>
         Placio
-      </a>
+      </Link>
 
       <div className="w-full max-w-md relative z-10">
         
