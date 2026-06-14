@@ -20,9 +20,11 @@ export const registerController = async (req, res) => {
             return res.status(409).json({ message: "User already exists with this email" });
         }
         // check if user already exists with same phone number
-        const existingNumber = await UserModel.findOne({ number: newUser.number });
-        if (existingNumber) {
-            return res.status(409).json({ message: "User already exists with this phone number" });
+        if (newUser.number) {
+            const existingNumber = await UserModel.findOne({ number: newUser.number });
+            if (existingNumber) {
+                return res.status(409).json({ message: "User already exists with this phone number" });
+            }
         }
 
         // hash the password
@@ -35,7 +37,7 @@ export const registerController = async (req, res) => {
         await newUserDoc.save();
 
         // send response
-        res.status(201).json({ message: "User registered successfully", payload: { name: newUserDoc.name } });
+        res.status(201).json({ success: true, message: "User registered successfully", payload: { name: newUserDoc.name } });
     }
     catch (err) {
         res.status(500).json({ message: "Internal Server Error - Register Controller", error: err.message });

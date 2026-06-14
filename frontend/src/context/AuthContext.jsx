@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { getCurrentUser } from '../api/authApi';
+import { checkAuth, logout } from '../api/authApi';
 
 export const AuthContext = createContext();
 
@@ -7,27 +7,37 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    try {
-      const data = await getCurrentUser();
-      if (data.success) {
-        setUser(data.payload);
-      } else {
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const res = await checkAuth();
+        if (res.success) {
+          setUser(res.payload);
+        }
+      } catch (error) {
+        console.warn("Auth check failed:", error);
         setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setUser(null);
+    };
+
+    initAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Logout failed:", err);
     } finally {
-      setLoading(false);
+      setUser(null);
+      window.location.href = '/auth?mode=login';
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, fetchUser }}>
+    <AuthContext.Provider value={{ user, setUser, loading, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );

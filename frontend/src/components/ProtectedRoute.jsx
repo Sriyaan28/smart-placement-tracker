@@ -1,25 +1,21 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { Loading } from './utils/Loading';
 
 export const ProtectedRoute = ({ allowedRoles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <Loading />;
   }
 
-  // If not logged in, redirect to login
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth?mode=login" replace />;
   }
 
-  // If role is not authorized, redirect to appropriate dashboard or 403 page
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    if (user.role === 'STUDENT') return <Navigate to="/student-dashboard" replace />;
-    if (user.role === 'COMPANY') return <Navigate to="/company-dashboard" replace />;
-    if (user.role === 'ADMIN') return <Navigate to="/admin-dashboard" replace />;
-    return <Navigate to="/" replace />;
+    return <Navigate to="/home" replace />; // Redirect to their own dashboard if unauthorized
   }
 
   return <Outlet />;

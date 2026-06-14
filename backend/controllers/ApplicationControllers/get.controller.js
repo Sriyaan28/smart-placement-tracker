@@ -70,3 +70,39 @@ export const getApplicationsController = async (req, res) => {
         return res.status(500).json({ success: false, message: "Failed to fetch applications", error: err.message })
     }
 }
+
+// get single application by ID (for student)
+export const getApplicationByIdController = async (req, res) => {
+    try {
+        const user = req.user;
+        const applicationId = req.params.applicationId;
+        
+        if (!applicationId) {
+            return res.status(400).json({ success: false, message: "Please provide application ID" });
+        }
+
+        const application = await ApplicationModel.findOne({ _id: applicationId, user: user.id })
+            .populate({
+                path: "jobId",
+                select: "title jobType user location salary duration skills description requirements",
+                strictPopulate: false
+            }).lean();
+
+        if (!application) {
+            return res.status(404).json({ success: false, message: "Application not found" });
+        }
+
+        // Populate the company (user) inside the job
+        await ApplicationModel.populate(application, {
+            path: "jobId.user",
+            model: "User",
+            select: "name email userProfile",
+            strictPopulate: false
+        });
+
+        return res.status(200).json({ success: true, payload: application });
+    }
+    catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to fetch application", error: err.message });
+    }
+}

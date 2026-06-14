@@ -1,1 +1,27 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000; /* Deep black background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* Zinc 800 */
+  border-radius: 10px;
+  border: 3px solid #000000; /* Creates padding effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981; /* Emerald 500 hover state */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a #000000;
+}

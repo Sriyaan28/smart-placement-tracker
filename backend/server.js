@@ -42,10 +42,14 @@ app.use(cors({
 
 // In serverless environments like Vercel, we must await the connection 
 // BEFORE executing route logic, otherwise we get MongoNetworkError.
-app.use(async (req, res, next) => {
-    await connectDB();
-    next();
-});
+if (STATE === "PRODUCTION") {
+    app.use(async (req, res, next) => {
+        await connectDB();
+        next();
+    });
+} else {
+    connectDB();
+}
 
 // =====================================================
 // LOCAL SERVER ONLY

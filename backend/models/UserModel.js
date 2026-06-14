@@ -16,7 +16,6 @@ const userSchema = new Schema({
     },
     number: {
         type: String,
-        required: [true, "Phone number is required field"],
         match: [/^[0-9]{10}$/, "Phone number must be exactly 10 digits"]
     },
     password: {

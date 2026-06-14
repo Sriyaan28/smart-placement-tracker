@@ -11,8 +11,16 @@ export const loginController = async (req, res) => {
     try {
         const credentials = req.body
         // user can pass number or email 
+        let query = [];
+        if (credentials.email) query.push({ email: credentials.email });
+        if (credentials.number) query.push({ number: credentials.number });
+
+        if (query.length === 0) {
+            return res.status(400).json({ success: false, message: "Email or phone number is required" });
+        }
+
         // ? check if user exists
-        const user = await UserModel.findOne({ $or: [{ number: credentials.number }, { email: credentials.email }] })
+        const user = await UserModel.findOne({ $or: query })
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" })
         }
@@ -30,7 +38,8 @@ export const loginController = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
-            sameSite: "lax"
+            sameSite: "lax",
+            path: "/"
         })
 
         return res.status(200).json({ success: true, message: "Login successful", payload: { name: user.name, email: user.email, number: user.number, role: user.role } })

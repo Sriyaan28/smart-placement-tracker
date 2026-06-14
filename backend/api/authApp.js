@@ -17,11 +17,23 @@ authApp.post("/register", registerController)
 authApp.post("/login", loginController)
 
 // route to logout
-authApp.get("/logout", verifyToken, logoutController)
+authApp.post("/logout", verifyToken, logoutController)
 
 // route to delete account
 authApp.post("/delete", verifyToken, deleteUserController)
 
+// route to check if email exists
+authApp.post("/check-email", async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, message: "Email is required" });
+        
+        const existingUser = await UserModel.findOne({ email });
+        return res.status(200).json({ success: true, exists: !!existingUser });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to check email", error: err.message });
+    }
+})
 
 // route to check current logged in user
 authApp.get("/me", verifyToken, (req, res) => {

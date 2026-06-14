@@ -15,7 +15,7 @@ export const deleteJob = async (jobId) => {
   return response.data;
 };
 
-export const getCompanyApplications = async (jobId) => {
+export const getApplicationsForJob = async (jobId) => {
   const response = await api.get(`/company/applications/${jobId}`);
   return response.data;
 };
