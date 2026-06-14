@@ -1,5 +1,28 @@
-### GET PROFILE
+### GET MY PROFILE
 GET http://localhost:4000/api/user/profile
 
-### GET ALL USER'S PROFILES
+### UPDATE MY PROFILE
+PUT http://localhost:4000/api/user/profile
+Content-Type: application/json
+
+{
+    "bio": "I am an enthusiastic learner and developer."
+}
+
+### GET ALL USER PROFILES
 GET http://localhost:4000/api/user/users
+
+### SEARCH USERS BY NAME
+GET http://localhost:4000/api/user/search/Student1
+
+### UPDATE CODING PLATFORM USERNAMES
+PUT http://localhost:4000/api/user/profile
+Content-Type: application/json
+
+{
+    "githubUsername": "Sriyaan28",
+    "leetcodeUsername": "Sriyaan28"
+}
+
+### GET USER CODING STATS
+GET http://localhost:4000/api/user/stats/6a2d2ce5d80a3b402095f81d

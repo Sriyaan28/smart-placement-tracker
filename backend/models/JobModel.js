@@ -18,7 +18,7 @@ const jobSchema = new Schema({
     },
     jobType: {
         type: String,
-        enum: ["FULL-TIME", "PART-TIME", "INTERNSHIP", "RESEARCH"]
+        enum: ["FULL_TIME", "PART_TIME", "INTERNSHIP", "RESEARCH"]
     },
     duration: {
         type: String
@@ -31,8 +31,8 @@ const jobSchema = new Schema({
     },
     location: {
         type: String,
-        enum: ["REMOTE", "ON-SITE", "HYBRID"],
-        default: "ON-SITE"
+        enum: ["REMOTE", "ON_SITE", "HYBRID"],
+        default: "ON_SITE"
     },
     skills: [
         {

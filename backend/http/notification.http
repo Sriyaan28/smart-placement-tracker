@@ -1,0 +1,17 @@
+### GET ALL NOTIFICATIONS
+GET http://localhost:4000/api/notification
+
+### GET SPECIFIC NOTIFICATION BY ID
+GET http://localhost:4000/api/notification/<NOTIFICATION_ID>
+
+### MARK ALL NOTIFICATIONS AS READ
+PUT http://localhost:4000/api/notification/mark-all-read
+
+### MARK SPECIFIC NOTIFICATION AS READ
+PUT http://localhost:4000/api/notification/<NOTIFICATION_ID>/read
+
+### DELETE ALL NOTIFICATIONS
+DELETE http://localhost:4000/api/notification/delete-all
+
+### DELETE SPECIFIC NOTIFICATION
+DELETE http://localhost:4000/api/notification/<NOTIFICATION_ID>

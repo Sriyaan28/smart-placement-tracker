@@ -1,0 +1,39 @@
+### VIEW MY RESUME
+GET http://localhost:4000/api/resume/view
+
+### DELETE MY RESUME
+DELETE http://localhost:4000/api/resume/delete
+
+### SAVE RESUME DATA
+POST http://localhost:4000/api/resume/save
+Content-Type: application/json
+
+{
+    "resumeUrl": "https://res.cloudinary.com/demo/image/upload/sample.pdf",
+    "resumeData": {
+        "skills": [
+            "JavaScript",
+            "React",
+            "Node.js"
+        ],
+        "experience": [],
+        "projects": [
+            {
+                "title": "Smart Placement Tracker",
+                "description": "A fullstack placement tracker.",
+                "github": "https://github.com/...",
+                "link": "",
+                "technologies": ["React", "Node.js"]
+            }
+        ],
+        "education": []
+    },
+    "atsScore": 85
+}
+
+### UPLOAD RESUME
+# Note: Testing file uploads in .http files is tricky. 
+# You need a real PDF file named "sample.pdf" in this same directory for this to work.
+# It's usually easier to test the upload route from the frontend UI!
+POST http://localhost:4000/api/resume/upload
+

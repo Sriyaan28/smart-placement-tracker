@@ -5,6 +5,10 @@ import cors from "cors"
 import { connectDB } from "./lib/db.js"
 import { authApp } from "./api/authApp.js"
 import { userApp } from "./api/userApp.js"
+import { resumeApp } from "./api/resumeApp.js"
+import { companyApp } from "./api/companyApp.js"
+import { jobApp } from "./api/jobApp.js"
+import { notificationApp } from "./api/notificationApp.js"
 
 // load env variables
 dotenv.config()
@@ -28,7 +32,7 @@ app.use(exp.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "*",
+    origin: ["https://smart-placement-tracker-sigma.vercel.app", "http://localhost:5173"],
     credentials: true
 }));
 
@@ -54,7 +58,10 @@ if (STATE !== "PRODUCTION") {
 
 app.use("/api/auth", authApp)
 app.use("/api/user", userApp)
-
+app.use("/api/resume", resumeApp)
+app.use("/api/company", companyApp)
+app.use("/api/job", jobApp)
+app.use("/api/notification", notificationApp)
 
 // =====================================================
 // ERROR HANDLER

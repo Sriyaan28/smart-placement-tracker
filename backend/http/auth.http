@@ -3,11 +3,11 @@ POST http://localhost:4000/api/auth/register
 Content-Type: application/json
 
 {
-    "name": "Ram",
-    "email": "student1@gmail.com",
-    "number": "9999999990",
-    "password": "student1",
-    "role": "STUDENT"
+    "name": "Amazon",
+    "email": "amazon@gmail.com",
+    "number": "9999999991",
+    "password": "amazon",
+    "role": "COMPANY"
 }
 
 ### LOGIN
@@ -15,8 +15,8 @@ POST http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
-    "email":"admin1@gmail.com",
-    "password": "admin1"
+    "email":"amazon@gmail.com",
+    "password": "amazon"
 }
 
 ### LOGOUT
@@ -24,3 +24,11 @@ GET http://localhost:4000/api/auth/logout
 
 ### GET ME
 GET http://localhost:4000/api/auth/me
+
+### DELETE ACCOUNT (Requires Password)
+POST http://localhost:4000/api/auth/delete
+Content-Type: application/json
+
+{
+    "password": "student1"
+}

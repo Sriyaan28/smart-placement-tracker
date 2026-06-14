@@ -1,0 +1,22 @@
+### GET ALL JOBS
+GET http://localhost:4000/api/job/jobs
+
+### GET A SPECIFIC JOB
+GET http://localhost:4000/api/job/details/6a2e5310a101e2ec477e9ec1
+
+### TOGGLE BLOCK JOB (ADMIN)
+PUT http://localhost:4000/api/job/toggle-block/6a2e5310a101e2ec477e9ec1
+
+### APPLY FOR A JOB (STUDENT)
+POST http://localhost:4000/api/job/apply
+Content-Type: application/json
+
+{
+    "jobId": "6a2e5310a101e2ec477e9ec1"
+}
+
+### GET MY APPLICATIONS (STUDENT)
+GET http://localhost:4000/api/job/my-applications
+
+### DELETE MY APPLICATION (STUDENT)
+DELETE http://localhost:4000/api/job/<APPLICATION_ID>

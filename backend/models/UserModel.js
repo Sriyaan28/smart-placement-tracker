@@ -25,7 +25,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["STUDENT", "MENTOR", "COMPANY", "ADMIN"],
+        enum: ["STUDENT", "COMPANY", "ADMIN"],
         required: [true, "Role is required field"]
     },
     bio: {
@@ -40,6 +40,14 @@ const userSchema = new Schema({
     userProfile: {
         type: String,
         default: "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740&q=80"
+    },
+    githubUsername: {
+        type: String,
+        trim: true
+    },
+    leetcodeUsername: {
+        type: String,
+        trim: true
     }
 }, {
     timestamps: true,

@@ -1,0 +1,53 @@
+### CREATE JOB (COMPANY)
+POST http://localhost:4000/api/company/createjob
+Content-Type: application/json
+
+{
+    "title": "Software Engineer",
+    "description": "Develop and maintain web applications using React and Node.js.",
+    "jobType": "FULL_TIME",
+    "location": "REMOTE",
+    "duration": "Permanent",
+    "salary": "$100k - $120k",
+    "skills": ["React", "Node.js"]
+}
+
+### UPDATE JOB (COMPANY)
+PUT http://localhost:4000/api/company/updatejob/6a2e5310a101e2ec477e9ec1
+Content-Type: application/json
+
+{
+    "title": "Software Engineer",
+    "description": "Develop and maintain web applications using React and Node.js.",
+    "jobType": "FULL_TIME",
+    "location": "REMOTE",
+    "duration": "Permanent",
+    "salary": "$100k - $110k",
+    "skills": ["React", "Node.js"]
+}
+
+### DELETE JOB (COMPANY / ADMIN)
+DELETE http://localhost:4000/api/company/deletejob/<JOB_ID>
+
+### GET APPLICATIONS FOR A JOB (COMPANY)
+GET http://localhost:4000/api/company/applications/6a2e5310a101e2ec477e9ec1
+
+### SCHEDULE INTERVIEW (COMPANY)
+PUT http://localhost:4000/api/company/schedule-interview
+Content-Type: application/json
+
+{
+    "applicationId": "6a2e541ff46bd55664a641d1",
+    "date": "2026-07-01",
+    "time": "10:00 AM",
+    "link": "https://meet.google.com/abc-defg-hij"
+}
+
+### TOGGLE APPLICATION STATUS (COMPANY)
+PUT http://localhost:4000/api/company/toggle-application-status
+Content-Type: application/json
+
+{
+    "applicationId": "6a2e541ff46bd55664a641d1",
+    "status": "SELECTED"
+}

@@ -2,6 +2,7 @@ import exp from "express";
 import { registerController } from "../controllers/AuthControllers/register.controller.js";
 import { loginController } from "../controllers/AuthControllers/login.controller.js";
 import { logoutController } from "../controllers/AuthControllers/logout.controller.js";
+import { deleteUserController } from "../controllers/AuthControllers/delete.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 
@@ -17,6 +18,10 @@ authApp.post("/login", loginController)
 
 // route to logout
 authApp.get("/logout", verifyToken, logoutController)
+
+// route to delete account
+authApp.post("/delete", verifyToken, deleteUserController)
+
 
 // route to check current logged in user
 authApp.get("/me", verifyToken, (req, res) => {

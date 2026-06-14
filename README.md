@@ -3,7 +3,6 @@
 # ROLES:
 
 - Students
-- Mentors(Trainers and Guidance)
 - Companies
 - Admin
 
@@ -26,24 +25,7 @@
  - Apply for jobs
  - View application status
  - View job details
- - View mentor's profiles
- - View training programs
- - Apply for training programs
- - View events
- - Apply for events
- - View guidance posts
- - Receive notifications (job updates, event updates, mentor updates)
- - Chat with mentors
-  
- # MENTORS:
-
- - CRUD operations on training programs
- - CRUD operations on events
- - Create posts for guidance
- - View students profiles
- - Manage student applications
- - Chat with students
- - Receive notifications (application updates, training updates, event updates)
+ - Receive notifications (job updates)
 
  # COMPANIES:
 
@@ -59,9 +41,6 @@
  - Manage roles (add, remove, update roles)
  - Manage companies (add, remove, update companies)
  - Manage job openings (add, remove, update job openings)
- - Manage training programs (add, remove, update training programs)
- - Manage events (add, remove, update events)
- - Manage guidance posts (add, remove, update guidance posts)
  
 
  

@@ -6,7 +6,7 @@ const applicationSchema = new Schema({
         ref: "User",
         required: [true, "User is undefined"]
     },
-    job: {
+    jobId: {
         type: Schema.Types.ObjectId,
         ref: "Job",
         required: [true, "Job is undefined"]
@@ -18,19 +18,9 @@ const applicationSchema = new Schema({
     },
     interview: [
         {
-            date: Date,
-            time: String,
-            link: String,
-            status: {
-                type: String,
-                enum: ["PENDING", "COMPLETED", "CANCELLED"],
-                default: "PENDING"
-            },
-            result: {
-                type: String,
-                enum: ["SELECTED", "REJECTED", "PENDING"],
-                default: "PENDING"
-            }
+            date: { type: String, default: null },
+            time: { type: String, default: null },
+            link: { type: String, default: null }
         }
     ]
 }, {
