@@ -37,10 +37,15 @@ app.use(cors({
 }));
 
 // =====================================================
-// CONNECT DATABASE
+// CONNECT DATABASE (SERVERLESS SAFE)
 // =====================================================
 
-connectDB();
+// In serverless environments like Vercel, we must await the connection 
+// BEFORE executing route logic, otherwise we get MongoNetworkError.
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
 
 // =====================================================
 // LOCAL SERVER ONLY
