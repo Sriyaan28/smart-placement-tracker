@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:4000/api',
+  baseURL: 'https://smart-placement-tracker-sigma.vercel.app/api',
   withCredentials: true, // This allows sending cookies (e.g. JWT token) with requests
   headers: {
     'Content-Type': 'application/json',
