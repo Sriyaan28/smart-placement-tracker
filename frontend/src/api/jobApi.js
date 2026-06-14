@@ -34,3 +34,13 @@ export const getApplicationById = async (applicationId) => {
   const response = await api.get(`/job/application/${applicationId}`);
   return response.data;
 };
+
+export const searchJobs = async (query) => {
+  const response = await api.get(`/job/search?q=${encodeURIComponent(query)}`);
+  return response.data;
+};
+
+export const getJobDetails = async (jobId) => {
+  const response = await api.get(`/job/details/${jobId}`);
+  return response.data;
+};

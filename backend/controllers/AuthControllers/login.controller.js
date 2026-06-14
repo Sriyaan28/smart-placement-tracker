@@ -42,7 +42,7 @@ export const loginController = async (req, res) => {
             path: "/"
         })
 
-        return res.status(200).json({ success: true, message: "Login successful", payload: { name: user.name, email: user.email, number: user.number, role: user.role } })
+        return res.status(200).json({ success: true, message: "Login successful", payload: { id: user._id, name: user.name, email: user.email, number: user.number, role: user.role } })
     }
     catch (err) {
         return res.status(500).json({ success: false, message: "Internal server error" })

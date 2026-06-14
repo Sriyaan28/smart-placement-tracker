@@ -4,6 +4,7 @@ import { loginController } from "../controllers/AuthControllers/login.controller
 import { logoutController } from "../controllers/AuthControllers/logout.controller.js";
 import { deleteUserController } from "../controllers/AuthControllers/delete.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
+import { UserModel } from "../models/UserModel.js";
 
 
 
@@ -36,13 +37,30 @@ authApp.post("/check-email", async (req, res) => {
 })
 
 // route to check current logged in user
-authApp.get("/me", verifyToken, (req, res) => {
+authApp.get("/me", verifyToken, async (req, res) => {
     try {
-        const user = req.user;
-        if (!user) {
+        const tokenUser = req.user;
+        if (!tokenUser || !tokenUser.id) {
             return res.status(401).json({ success: false, message: "Session expired, Please login again" })
         }
-        return res.status(200).json({ success: true, payload: user })
+        
+        const user = await UserModel.findById(tokenUser.id).select("-password");
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        
+        // Return structured user data to match what the frontend expects
+        return res.status(200).json({ 
+            success: true, 
+            payload: { 
+                id: user._id, 
+                name: user.name, 
+                email: user.email, 
+                number: user.number, 
+                role: user.role 
+            } 
+        })
     }
     catch (err) {
         return res.status(500).json({ success: false, message: "Failed to fetch user details", error: err.message })
@@ -52,7 +70,6 @@ authApp.get("/me", verifyToken, (req, res) => {
 
 
 //==============================================================
-import { UserModel } from "../models/UserModel.js";
 // route to test - remove later
 authApp.get("/test", async (req, res) => {
     try {

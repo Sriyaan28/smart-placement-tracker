@@ -1,5 +1,7 @@
 import { UserModel } from "../../models/UserModel.js";
 
+const githubCache = new Map();
+
 export const getCodingStatsController = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -17,27 +19,39 @@ export const getCodingStatsController = async (req, res) => {
         }
 
         const stats = {
+            userName: user.name,
             github: null,
             leetcode: null
         };
 
         // Fetch GitHub Stats
         if (user.githubUsername) {
-            try {
-                const ghRes = await fetch(`https://api.github.com/users/${user.githubUsername}`);
-                if (ghRes.ok) {
-                    const ghData = await ghRes.json();
-                    stats.github = {
-                        username: ghData.login,
-                        avatar: ghData.avatar_url,
-                        url: ghData.html_url,
-                        followers: ghData.followers,
-                        following: ghData.following,
-                        publicRepos: ghData.public_repos
-                    };
+            const now = Date.now();
+            const cachedGH = githubCache.get(user.githubUsername);
+            
+            // Check if we have cached data that is less than 1 hour old (3600000 ms)
+            if (cachedGH && (now - cachedGH.lastFetched < 3600000)) {
+                stats.github = cachedGH.data;
+            } else {
+                try {
+                    const ghRes = await fetch(`https://api.github.com/users/${user.githubUsername}`);
+                    if (ghRes.ok) {
+                        const ghData = await ghRes.json();
+                        stats.github = {
+                            username: ghData.login,
+                            avatar: ghData.avatar_url,
+                            url: ghData.html_url,
+                            followers: ghData.followers,
+                            following: ghData.following,
+                            publicRepos: ghData.public_repos
+                        };
+                        
+                        // Cache the successful result
+                        githubCache.set(user.githubUsername, { data: stats.github, lastFetched: now });
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch GitHub stats:", error);
                 }
-            } catch (error) {
-                console.error("Failed to fetch GitHub stats:", error);
             }
         }
 

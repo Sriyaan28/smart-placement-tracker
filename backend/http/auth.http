@@ -15,8 +15,8 @@ POST http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
-    "email":"amazon@gmail.com",
-    "password": "amazon"
+    "email":"student1@gmail.com",
+    "password": "student1"
 }
 
 ### LOGOUT

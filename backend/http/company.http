@@ -37,7 +37,7 @@ PUT http://localhost:4000/api/company/schedule-interview
 Content-Type: application/json
 
 {
-    "applicationId": "6a2e541ff46bd55664a641d1",
+    "applicationId": "6a2ef1c627fdce4c52385498",
     "date": "2026-07-01",
     "time": "10:00 AM",
     "link": "https://meet.google.com/abc-defg-hij"
@@ -48,6 +48,6 @@ PUT http://localhost:4000/api/company/toggle-application-status
 Content-Type: application/json
 
 {
-    "applicationId": "6a2e541ff46bd55664a641d1",
-    "status": "SELECTED"
+    "applicationId": "6a2ef4f227fdce4c5238549d",
+    "status": "REJECTED"
 }

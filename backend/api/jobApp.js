@@ -1,6 +1,7 @@
 import exp from "express"
 import { verifyToken } from "../middleware/verifyToken.js"
 import { getAllJobsController, getJobController, getJobsByCompanyController } from "../controllers/JobControllers/get.controller.js"
+import { searchJobsController } from "../controllers/JobControllers/search.controller.js"
 import { toggleBlockJobController } from "../controllers/JobControllers/toggleBlock.controller.js"
 import { checkAccess } from "../middleware/checkAccess.js"
 import { applyController } from "../controllers/ApplicationControllers/apply.controller.js"
@@ -11,6 +12,9 @@ export const jobApp = exp.Router()
 
 // Route to view jobs in marketplace
 jobApp.get("/jobs", verifyToken, getAllJobsController)
+
+// Route to search jobs
+jobApp.get("/search", verifyToken, searchJobsController)
 
 // Route to view my applications (STUDENT)
 jobApp.get("/my-applications", verifyToken, checkAccess("STUDENT"), getMyApplicationsController)
