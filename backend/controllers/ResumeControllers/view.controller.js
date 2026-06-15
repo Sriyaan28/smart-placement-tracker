@@ -7,7 +7,7 @@ export const viewResumeController = async (req, res) => {
         const resume = await ResumeModel.findOne({ user: user.id });
 
         if (!resume) {
-            return res.status(404).json({ success: false, message: "Resume not found" });
+            return res.status(200).json({ success: true, payload: null });
         }
 
         return res.status(200).json({ success: true, payload: resume });

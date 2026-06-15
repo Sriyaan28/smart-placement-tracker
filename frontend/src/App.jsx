@@ -8,10 +8,12 @@ import { JobDetails } from './pages/JobDetails';
 import { ApplicationDetails } from './pages/ApplicationDetails';
 import { MyApplications } from './pages/MyApplications';
 import { Stats } from './pages/Stats';
+import { ProfilePage } from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 import { JobsProvider } from './context/JobsContext';
 import { ApplicationsProvider } from './context/ApplicationsContext';
 import { StatsProvider } from './context/StatsContext';
+import { ProfileProvider } from './context/ProfileContext';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Loading } from './components/utils/Loading';
@@ -70,7 +72,7 @@ function AppRoutes() {
           <Route path="applications" element={<MyApplications />} />
           <Route path="applications/:id" element={<ApplicationDetails />} />
           <Route path="stats/:userId" element={<Stats />} />
-          <Route path="profile" element={<Placeholder title="Profile" />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
     </Routes>
@@ -83,9 +85,11 @@ function App() {
       <JobsProvider>
         <ApplicationsProvider>
           <StatsProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
+            <ProfileProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </ProfileProvider>
           </StatsProvider>
         </ApplicationsProvider>
       </JobsProvider>

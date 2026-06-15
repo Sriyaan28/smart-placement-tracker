@@ -47,6 +47,11 @@ const userSchema = new Schema({
     leetcodeUsername: {
         type: String,
         trim: true
+    },
+    linkedinUrl: {
+        type: String,
+        trim: true,
+        match: [/^https:\/\/(www\.)?linkedin\.com\/in\/.*$/, "Please enter a valid LinkedIn URL"]
     }
 }, {
     timestamps: true,

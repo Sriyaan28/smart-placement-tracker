@@ -9,6 +9,11 @@ export const uploadResume = async (formData) => {
   return response.data;
 };
 
+export const analyzeResume = async (resumeText) => {
+  const response = await api.post('/resume/analyze', { resumeText });
+  return response.data;
+};
+
 export const viewResume = async () => {
   const response = await api.get('/resume/view');
   return response.data;
@@ -21,5 +26,10 @@ export const saveResume = async (resumeData) => {
 
 export const deleteResume = async () => {
   const response = await api.delete('/resume/delete');
+  return response.data;
+};
+
+export const discardResume = async (resumeUrl) => {
+  const response = await api.post('/resume/discard', { resumeUrl });
   return response.data;
 };
