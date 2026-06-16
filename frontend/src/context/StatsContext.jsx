@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useRef } from 'react';
-import { getCodingStats } from '../api/userApi';
+import { getBasicStats } from '../api/userApi';
 
 export const StatsContext = createContext();
 
@@ -13,7 +13,7 @@ export const StatsProvider = ({ children }) => {
 
   const backgroundFetch = useCallback(async (userId) => {
     try {
-      const res = await getCodingStats(userId);
+      const res = await getBasicStats(userId);
       if (res.success) {
         const now = Date.now();
         statsCacheRef.current[userId] = { data: res.payload, lastFetched: now };

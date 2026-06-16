@@ -5,6 +5,11 @@ export const getProfile = async () => {
   return response.data;
 };
 
+export const getCompanyPublicProfile = async (companyId) => {
+  const response = await api.get(`/user/company/${companyId}`);
+  return response.data;
+};
+
 export const getAllProfiles = async () => {
   const response = await api.get('/user/profiles');
   return response.data;
@@ -15,8 +20,23 @@ export const updateProfile = async (userData) => {
   return response.data;
 };
 
-export const getCodingStats = async (userId) => {
-  const response = await api.get(`/user/stats/${userId}`);
+export const getBasicStats = async (userId) => {
+  const response = await api.get(`/user/stats/${userId}/basic`);
+  return response.data;
+};
+
+export const getResumeStats = async (userId) => {
+  const response = await api.get(`/user/stats/${userId}/resume`);
+  return response.data;
+};
+
+export const getLeetcodeStats = async (userId) => {
+  const response = await api.get(`/user/stats/${userId}/leetcode`);
+  return response.data;
+};
+
+export const getGithubStats = async (userId) => {
+  const response = await api.get(`/user/stats/${userId}/github`);
   return response.data;
 };
 

@@ -48,3 +48,25 @@ export const getAllProfilesController = async (req, res) => {
         return res.status(500).json({ success: false, message: "Failed to fetch users", error: err.message })
     }
 }
+
+// CONTROLLER TO GET PUBLIC COMPANY PROFILE
+export const getCompanyPublicProfileController = async (req, res) => {
+    try {
+        const companyId = req.params?.id;
+        if (!companyId) {
+            return res.status(400).json({ success: false, message: "Company ID is required" });
+        }
+
+        const profile = await UserModel.findOne({ _id: companyId, role: "COMPANY" })
+            .select("name email bio linkedinUrl userProfile role");
+            
+        if (!profile) {
+            return res.status(404).json({ success: false, message: "Company not found" });
+        }
+
+        return res.status(200).json({ success: true, payload: profile });
+    }
+    catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to fetch company profile", error: err.message });
+    }
+}

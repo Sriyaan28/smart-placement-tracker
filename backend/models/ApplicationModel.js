@@ -22,7 +22,11 @@ const applicationSchema = new Schema({
             time: { type: String, default: null },
             link: { type: String, default: null }
         }
-    ]
+    ],
+    emailSent: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true,
     versionKey: false,

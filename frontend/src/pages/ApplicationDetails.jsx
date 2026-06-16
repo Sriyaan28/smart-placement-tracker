@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getApplicationById, deleteApplication } from '../api/jobApi';
-import { ChevronLeft, Building2, MapPin, IndianRupee, Clock, Briefcase, Calendar, Link as LinkIcon, AlertTriangle, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { ChevronLeft, Building2, MapPin, IndianRupee, Clock, Briefcase, Calendar, Link as LinkIcon, AlertTriangle, AlertCircle, CheckCircle2, XCircle, Mail } from 'lucide-react';
 
 export const ApplicationDetails = () => {
   const { id } = useParams();
@@ -117,7 +117,12 @@ export const ApplicationDetails = () => {
             <h1 className="text-2xl md:text-3xl font-black text-white mb-2">{job?.title}</h1>
             <div className="flex items-center gap-2 text-zinc-400 font-medium mb-2">
               <Building2 className="w-4 h-4" />
-              {company?.name || 'Company Name'}
+              <span 
+                onClick={() => company?._id && navigate(`/home/company/${company._id}`)}
+                className={`${company?._id ? 'hover:text-emerald-400 cursor-pointer transition-colors' : ''}`}
+              >
+                {company?.name || 'Company Name'}
+              </span>
             </div>
             <p className="text-zinc-500 text-sm">
               Applied on {new Date(application.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -239,9 +244,18 @@ export const ApplicationDetails = () => {
             <section className="bg-emerald-500/5 border border-emerald-500/20 p-6 rounded-3xl flex items-start gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-lg font-bold text-emerald-400 mb-1">Congratulations! 🎉</h3>
+                <div className="flex items-center gap-3 mb-1">
+                  <h3 className="text-lg font-bold text-emerald-400">Congratulations! 🎉</h3>
+                  {application.emailSent && (
+                    <span className="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-blue-500/20 flex items-center gap-1">
+                      <Mail className="w-3 h-3" /> Mail Sent
+                    </span>
+                  )}
+                </div>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  You have been selected for this role! The company will reach out to you via email shortly regarding your offer letter and the next steps.
+                  {application.emailSent 
+                    ? "You have been selected for this role! The company has sent you an email regarding your offer letter and the next steps. Please check your inbox."
+                    : "You have been selected for this role! The company will reach out to you via email shortly regarding your offer letter and the next steps."}
                 </p>
               </div>
             </section>
@@ -251,9 +265,18 @@ export const ApplicationDetails = () => {
             <section className="bg-red-500/5 border border-red-500/20 p-6 rounded-3xl flex items-start gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-lg font-bold text-red-400 mb-1">Better luck next time!</h3>
+                <div className="flex items-center gap-3 mb-1">
+                  <h3 className="text-lg font-bold text-red-400">Better luck next time!</h3>
+                  {application.emailSent && (
+                    <span className="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-blue-500/20 flex items-center gap-1">
+                      <Mail className="w-3 h-3" /> Mail Sent
+                    </span>
+                  )}
+                </div>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  Unfortunately, the company has decided to move forward with other candidates at this time. Don't be discouraged—keep applying and expanding your skills!
+                  {application.emailSent
+                    ? "Unfortunately, the company has decided to move forward with other candidates at this time. They have sent you an email with further details. Don't be discouraged—keep applying and expanding your skills!"
+                    : "Unfortunately, the company has decided to move forward with other candidates at this time. Don't be discouraged—keep applying and expanding your skills!"}
                 </p>
               </div>
             </section>

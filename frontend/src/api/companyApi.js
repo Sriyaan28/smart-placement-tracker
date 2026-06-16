@@ -29,3 +29,18 @@ export const toggleApplicationStatus = async (statusData) => {
   const response = await api.put('/company/toggle-application-status', statusData);
   return response.data;
 };
+
+export const getAllCompanyApplications = async () => {
+  const response = await api.get('/company/company-applications');
+  return response.data;
+};
+
+export const getCompanyApplicationById = async (applicationId) => {
+  const response = await api.get(`/company/company-application/${applicationId}`);
+  return response.data;
+};
+
+export const markEmailSent = async (applicationId) => {
+  const response = await api.patch('/company/mark-email-sent', { applicationId });
+  return response.data;
+};

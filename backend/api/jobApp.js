@@ -19,8 +19,8 @@ jobApp.get("/search", verifyToken, searchJobsController)
 // Route to view my applications (STUDENT)
 jobApp.get("/my-applications", verifyToken, checkAccess("STUDENT"), getMyApplicationsController)
 
-// Route to view a specific application by ID (STUDENT)
-jobApp.get("/application/:applicationId", verifyToken, checkAccess("STUDENT"), getApplicationByIdController)
+// Route to view a specific application by ID
+jobApp.get("/application/:applicationId", verifyToken, checkAccess("STUDENT", "COMPANY", "ADMIN"), getApplicationByIdController)
 
 // Route to view a specific job
 jobApp.get("/details/:jobId", verifyToken, getJobController)

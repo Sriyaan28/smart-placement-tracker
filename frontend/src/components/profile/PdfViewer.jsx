@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, FileText, AlertCircle } from 'lucide-react';
 
-export const PdfViewer = ({ url }) => {
+export const PdfViewer = ({ url, isDarkMode = false }) => {
   const [blobUrl, setBlobUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [useFallback, setUseFallback] = useState(false);
@@ -64,25 +64,30 @@ export const PdfViewer = ({ url }) => {
     );
   }
 
-  if (useFallback || !blobUrl) {
-    return (
-      <iframe 
-        src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`} 
-        className="w-full h-full border-none"
-        title="Resume PDF"
-      />
-    );
-  }
+  const filterStyle = isDarkMode ? { filter: 'invert(1) hue-rotate(180deg) grayscale(0.5) contrast(1.2)' } : {};
 
   return (
-    <object 
-      data={blobUrl} 
-      type="application/pdf" 
-      className="w-full h-full border-none bg-zinc-950"
-    >
-      <div className="flex items-center justify-center h-full w-full bg-zinc-950 p-8 text-center text-zinc-500">
-        <p>Your browser does not support native PDF rendering. <br/><a href={blobUrl} download className="text-emerald-500 hover:underline">Download the PDF</a> instead.</p>
-      </div>
-    </object>
+    <div className="relative w-full h-full overflow-hidden bg-zinc-950 group">
+
+      {useFallback || !blobUrl ? (
+        <iframe 
+          src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`} 
+          className="w-full h-full border-none transition-all duration-500"
+          title="Resume PDF"
+          style={filterStyle}
+        />
+      ) : (
+        <object 
+          data={blobUrl} 
+          type="application/pdf" 
+          className="w-full h-full border-none transition-all duration-500"
+          style={filterStyle}
+        >
+          <div className="flex items-center justify-center h-full w-full p-8 text-center text-zinc-500">
+            <p>Your browser does not support native PDF rendering. <br/><a href={blobUrl} download className="text-emerald-500 hover:underline">Download the PDF</a> instead.</p>
+          </div>
+        </object>
+      )}
+    </div>
   );
 };

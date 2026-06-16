@@ -14,12 +14,22 @@ import { JobsProvider } from './context/JobsContext';
 import { ApplicationsProvider } from './context/ApplicationsContext';
 import { StatsProvider } from './context/StatsContext';
 import { ProfileProvider } from './context/ProfileContext';
+import { CompanyProvider } from './context/CompanyContext';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Loading } from './components/utils/Loading';
 import { StudentLayout } from './layouts/StudentLayout';
+import { CompanyLayout } from './layouts/CompanyLayout';
 import { Placeholder } from './components/utils/Placeholder';
 import { Outlet } from 'react-router-dom';
+
+// New Company Pages
+import { PostJob } from './pages/PostJob';
+import { EditJob } from './pages/EditJob';
+import { CompanyApplications } from './pages/CompanyApplications';
+import { CompanyApplicationDetails } from './pages/CompanyApplicationDetails';
+import { SearchStudents } from './pages/SearchStudents';
+import { CompanyPublicProfile } from './pages/CompanyPublicProfile';
 
 // Helper component to redirect logged-in users away from public pages
 const PublicRoute = ({ children }) => {
@@ -44,7 +54,11 @@ const DashboardRouter = () => {
     return <StudentLayout />;
   }
   
-  // Fallback for other roles (Company, Admin)
+  if (user.role === 'COMPANY') {
+    return <CompanyLayout />;
+  }
+  
+  // Fallback for other roles (Admin)
   return <Outlet />;
 };
 
@@ -73,6 +87,14 @@ function AppRoutes() {
           <Route path="applications/:id" element={<ApplicationDetails />} />
           <Route path="stats/:userId" element={<Stats />} />
           <Route path="profile" element={<ProfilePage />} />
+          
+          {/* Company-specific routes mapped to the same layout */}
+          <Route path="company-applications" element={<CompanyApplications />} />
+          <Route path="company-application/:applicationId" element={<CompanyApplicationDetails />} />
+          <Route path="post-job" element={<PostJob />} />
+          <Route path="edit-job/:jobId" element={<EditJob />} />
+          <Route path="search-students" element={<SearchStudents />} />
+          <Route path="company/:companyId" element={<CompanyPublicProfile />} />
         </Route>
       </Route>
     </Routes>
@@ -86,9 +108,11 @@ function App() {
         <ApplicationsProvider>
           <StatsProvider>
             <ProfileProvider>
-              <BrowserRouter>
-                <AppRoutes />
-              </BrowserRouter>
+              <CompanyProvider>
+                <BrowserRouter>
+                  <AppRoutes />
+                </BrowserRouter>
+              </CompanyProvider>
             </ProfileProvider>
           </StatsProvider>
         </ApplicationsProvider>

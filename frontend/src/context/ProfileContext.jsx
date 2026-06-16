@@ -177,10 +177,12 @@ export const ProfileProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user && user.role === 'STUDENT') {
+    if (user) {
       fetchProfile();
-      fetchResume();
-    } else if (!user) {
+      if (user.role === 'STUDENT') {
+        fetchResume();
+      }
+    } else {
       setProfile(null);
       setResume(null);
       setParsedResume(null);

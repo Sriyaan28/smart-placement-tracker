@@ -78,3 +78,33 @@ export const toggleApplicationStatusController = async (req, res) => {
 }
 
 
+// mark email as sent
+export const markEmailSentController = async (req, res) => {
+    try {
+        const { applicationId } = req.body;
+        if (!applicationId) {
+            return res.status(400).json({ success: false, message: "Please provide application ID" });
+        }
+
+        const application = await ApplicationModel.findById(applicationId);
+        if (!application) {
+            return res.status(404).json({ success: false, message: "Application not found" });
+        }
+
+        // check if the job is posted by the company
+        const job = await JobModel.findById(application.jobId);
+        if (!job) {
+            return res.status(404).json({ success: false, message: "Job not found" });
+        }
+        if (job.user.toString() !== req.user.id.toString()) {
+            return res.status(403).json({ success: false, message: "You are not authorized to modify this application" });
+        }
+
+        application.emailSent = true;
+        await application.save();
+
+        return res.status(200).json({ success: true, message: "Email status marked as sent" });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: "Failed to mark email as sent", error: err.message });
+    }
+}

@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { useProfile } from '../../hooks/useProfile';
+import { useProfile } from '../../../hooks/useProfile';
 import { Upload, Trash2, FileText, CheckCircle2, Loader2, AlertCircle, Edit3, Briefcase, Code, GraduationCap, ExternalLink } from 'lucide-react';
 import { ResumeReview } from './ResumeReview';
-import { PdfViewer } from './PdfViewer';
+import { PdfViewer } from '../PdfViewer';
 
 const ExpandableExperience = ({ exp }) => {
   const [expanded, setExpanded] = useState(false);
@@ -213,7 +213,7 @@ export const ResumeTab = () => {
                 onClick={() => setParsedResume(resume)}
                 className="relative z-10 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-1.5 rounded-full flex items-center gap-1 transition-colors"
               >
-                <Edit3 size={14} /> Edit Details
+                <Edit3 size={14} /> Edit
               </button>
             </div>
             <div className="flex items-end gap-2 relative z-10">

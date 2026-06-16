@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Home, Search, FileText, BarChart2, User, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { Home, Search, FileText, PlusCircle, User, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
-export const StudentLayout = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+export const CompanyLayout = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const { user, handleLogout } = useAuth();
   const location = useLocation();
 
   const navItems = [
-    { name: 'Home', path: '/home', icon: Home },
-    { name: 'Search Jobs', path: '/home/search', icon: Search },
-    { name: 'My Applications', path: '/home/applications', icon: FileText },
-    { name: 'My Stats', path: `/home/stats/${user?.id || ''}`, icon: BarChart2 },
+    { name: 'Home', path: '/home', icon: Home, exact: true },
+    { name: 'Job Applications', path: '/home/company-applications', icon: FileText },
+    { name: 'Post Job', path: '/home/post-job', icon: PlusCircle },
+    { name: 'Search Students', path: '/home/search-students', icon: Search },
     { name: 'Profile', path: '/home/profile', icon: User },
   ];
 
@@ -38,7 +38,7 @@ export const StudentLayout = () => {
 
         {/* Logo / Brand */}
         <div className="flex items-center gap-3 mb-10 w-full px-6">
-          <div className="w-8 h-8 min-w-[32px] bg-emerald-500 rounded-full flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 min-w-[32px] bg-blue-500 rounded-full flex items-center justify-center shrink-0">
             <div className="w-3 h-3 bg-black rounded-full" />
           </div>
           {!isCollapsed && <span className="text-white font-bold text-xl tracking-tight animate-in fade-in">Placio</span>}
@@ -48,9 +48,8 @@ export const StudentLayout = () => {
         <nav className="flex-1 w-full flex flex-col gap-2 px-3">
           {navItems.map((item) => {
             const Icon = item.icon;
-            // Exact match for home, partial for others to keep them highlighted if nested
-            const isActive = item.path === '/home' 
-              ? location.pathname === '/home' 
+            const isActive = item.exact 
+              ? location.pathname === item.path 
               : location.pathname.startsWith(item.path);
 
             return (
@@ -59,14 +58,14 @@ export const StudentLayout = () => {
                 to={item.path}
                 className={`flex items-center gap-4 px-3 py-3 rounded-xl transition-all group overflow-hidden ${
                   isActive 
-                    ? 'bg-emerald-500/10 text-emerald-500' 
+                    ? 'bg-blue-500/10 text-blue-500' 
                     : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'
                 }`}
                 title={isCollapsed ? item.name : undefined}
               >
-                <Icon size={22} className={`shrink-0 ${isActive ? 'drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'group-hover:scale-110 transition-transform'}`} />
+                <Icon size={22} className={`shrink-0 ${isActive ? 'drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'group-hover:scale-110 transition-transform'}`} />
                 {!isCollapsed && (
-                  <span className={`font-medium whitespace-nowrap animate-in fade-in ${isActive ? 'text-emerald-500' : 'text-zinc-300'}`}>
+                  <span className={`font-medium whitespace-nowrap animate-in fade-in ${isActive ? 'text-blue-500' : 'text-zinc-300'}`}>
                     {item.name}
                   </span>
                 )}

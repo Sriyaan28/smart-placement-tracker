@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useProfile } from '../../hooks/useProfile';
-import { Save, Loader2, FileText, AlertCircle, Plus, Trash2, Check, ChevronsUpDown, X, BrainCircuit } from 'lucide-react';
-import { SKILLS } from '../../utils/skills';
-import { PdfViewer } from './PdfViewer';
+import { useProfile } from '../../../hooks/useProfile';
+import { Save, Loader2, FileText, AlertCircle, Plus, Trash2, Check, ChevronsUpDown, X, BrainCircuit, Maximize, Minimize } from 'lucide-react';
+import { SKILLS } from '../../../utils/skills';
+import { PdfViewer } from '../PdfViewer';
 
 // --- Custom MultiSelect Autocomplete Component ---
 const SkillsMultiSelect = ({ selectedSkills, onChange }) => {
@@ -93,6 +93,33 @@ export const ResumeReview = () => {
   
   const [saveError, setSaveError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsFullscreen(false);
+        setIsDarkMode(true);
+      }
+    };
+    if (isFullscreen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isFullscreen]);
+
+  const toggleFullscreen = () => {
+    const nextState = !isFullscreen;
+    setIsFullscreen(nextState);
+    setIsDarkMode(!nextState); // false if entering fullscreen, true if exiting
+  };
 
   // Initialize form when parsedResume changes
   useEffect(() => {
@@ -184,7 +211,10 @@ export const ResumeReview = () => {
   if (!uploadedResume && !parsedResume) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in zoom-in-95 duration-300 h-[800px]">
+    <div className={isFullscreen 
+      ? "fixed inset-0 z-[100] bg-zinc-950 p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6 h-screen w-screen overflow-hidden" 
+      : "grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in zoom-in-95 duration-300 h-[800px]"
+    }>
       
       {/* Left: PDF Viewer */}
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col h-full">
@@ -193,18 +223,39 @@ export const ResumeReview = () => {
             <FileText className="w-5 h-5 text-emerald-500" />
             <span className="text-white font-medium">Uploaded PDF</span>
           </div>
-          {isAnalyzing ? (
-             <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs font-bold rounded-full border border-purple-500/20 flex items-center gap-2 animate-pulse">
-               <BrainCircuit className="w-4 h-4" /> Analyzing AI...
-             </span>
-          ) : (
-            <span className="px-3 py-1 bg-yellow-500/10 text-yellow-500 text-xs font-bold rounded-full border border-yellow-500/20">
-              Review Mode
-            </span>
-          )}
+          <div className="flex items-center gap-4">
+            {/* Toggle Switch */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-400 font-medium hidden sm:block">Dark Mode</span>
+              <button 
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`w-10 h-5 rounded-full relative transition-colors duration-200 focus:outline-none ${isDarkMode ? 'bg-emerald-500' : 'bg-zinc-700'}`}
+              >
+                <div className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-transform duration-200 ${isDarkMode ? 'translate-x-5' : 'translate-x-[3px]'}`} />
+              </button>
+            </div>
+            
+            <button
+              onClick={toggleFullscreen}
+              className="text-zinc-400 hover:text-white transition-colors p-1 hidden sm:block"
+              title={isFullscreen ? "Exit Fullscreen (Esc)" : "Fullscreen"}
+            >
+              {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+            </button>
+            
+            {isAnalyzing ? (
+               <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs font-bold rounded-full border border-purple-500/20 flex items-center gap-2 animate-pulse">
+                 <BrainCircuit className="w-4 h-4" /> Analyzing AI...
+               </span>
+            ) : (
+              <span className="px-3 py-1 bg-yellow-500/10 text-yellow-500 text-xs font-bold rounded-full border border-yellow-500/20">
+                Review Mode
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex-1 bg-zinc-950 relative">
-          <PdfViewer url={uploadedResume?.resumeUrl || parsedResume?.resumeUrl} />
+          <PdfViewer url={uploadedResume?.resumeUrl || parsedResume?.resumeUrl} isDarkMode={isDarkMode} />
         </div>
       </div>
 

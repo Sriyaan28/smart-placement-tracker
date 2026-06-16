@@ -81,7 +81,8 @@ export const getApplicationByIdController = async (req, res) => {
             return res.status(400).json({ success: false, message: "Please provide application ID" });
         }
 
-        const application = await ApplicationModel.findOne({ _id: applicationId, user: user.id })
+        const query = user.role === 'STUDENT' ? { _id: applicationId, user: user.id } : { _id: applicationId };
+        const application = await ApplicationModel.findOne(query)
             .populate({
                 path: "jobId",
                 select: "title jobType user location salary duration skills description requirements",
@@ -104,5 +105,68 @@ export const getApplicationByIdController = async (req, res) => {
     }
     catch (err) {
         return res.status(500).json({ success: false, message: "Failed to fetch application", error: err.message });
+    }
+}
+
+// get all applications for a company (lightweight)
+export const getAllCompanyApplicationsController = async (req, res) => {
+    try {
+        const user = req.user;
+        // Find all jobs owned by this company
+        const jobs = await JobModel.find({ user: user.id }).select('_id title').lean();
+        const jobIds = jobs.map(job => job._id);
+        const jobMap = jobs.reduce((acc, job) => ({ ...acc, [job._id]: job.title }), {});
+
+        // Fetch all applications for these jobs
+        const applications = await ApplicationModel.find({ jobId: { $in: jobIds } })
+            .populate({ path: 'user', select: 'name' })
+            .sort({ createdAt: 1 })
+            .lean();
+
+        // Map job titles directly to avoid nested populates
+        const lightweightApps = applications.map(app => ({
+            _id: app._id,
+            jobId: app.jobId,
+            jobTitle: jobMap[app.jobId],
+            user: app.user,
+            status: app.status,
+            createdAt: app.createdAt,
+            emailSent: app.emailSent
+        }));
+
+        return res.status(200).json({ success: true, payload: lightweightApps });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Failed to fetch applications', error: err.message });
+    }
+}
+
+// get single application by ID for company
+export const getCompanyApplicationByIdController = async (req, res) => {
+    try {
+        const user = req.user;
+        const applicationId = req.params.applicationId;
+
+        if (!applicationId) {
+            return res.status(400).json({ success: false, message: 'Please provide application ID' });
+        }
+
+        // Find application
+        const application = await ApplicationModel.findById(applicationId)
+            .populate({ path: 'jobId', select: 'title user' })
+            .populate({ path: 'user', select: 'name email userProfile _id bio githubUsername leetcodeUsername linkedinUrl' })
+            .lean();
+
+        if (!application) {
+            return res.status(404).json({ success: false, message: 'Application not found' });
+        }
+
+        // Verify company owns this job
+        if (application.jobId.user.toString() !== user.id.toString() && user.role !== 'ADMIN') {
+            return res.status(403).json({ success: false, message: 'Unauthorized access to this application' });
+        }
+
+        return res.status(200).json({ success: true, payload: application });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Failed to fetch application details', error: err.message });
     }
 }

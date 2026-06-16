@@ -9,7 +9,7 @@ const jobSchema = new Schema({
     description: {
         type: String,
         required: [true, "Job description is required"],
-        maxLength: [100, "Max length of description is 100 chars"]
+        maxLength: [500, "Max length of description is 500 chars"]
     },
     user: {
         type: Schema.Types.ObjectId,
@@ -18,10 +18,12 @@ const jobSchema = new Schema({
     },
     jobType: {
         type: String,
-        enum: ["FULL_TIME", "PART_TIME", "INTERNSHIP", "RESEARCH"]
+        enum: ["FULL_TIME", "PART_TIME", "INTERNSHIP", "RESEARCH"],
+        required: [true, "Job type is required"]
     },
     duration: {
-        type: String
+        type: String,
+        required: [true, "Duration is required"]
     },
     experience: {
         type: Number,
@@ -32,14 +34,15 @@ const jobSchema = new Schema({
     location: {
         type: String,
         enum: ["REMOTE", "ON_SITE", "HYBRID"],
-        default: "ON_SITE"
+        required: [true, "Location is required"]
     },
-    skills: [
-        {
+    skills: {
+        type: [{
             type: String,
             enum: SKILLS,
-        }
-    ],
+        }],
+        validate: [(val) => val.length > 0, "At least one skill is required"]
+    },
     salary: {
         type: String,
         required: [true, "Salary is required"]

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getJobDetails, applyForJob } from '../api/jobApi';
-import { MapPin, IndianRupee, Clock, Briefcase, Building2, ChevronLeft, CalendarDays, CheckCircle2, AlertCircle } from 'lucide-react';
+import { deleteJob } from '../api/companyApi';
+import { MapPin, IndianRupee, Clock, Briefcase, Building2, ChevronLeft, CalendarDays, CheckCircle2, AlertCircle, Edit2, Trash2, X } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useCompany } from '../hooks/useCompany';
 
 export const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { refreshCompanyJobs } = useCompany();
   
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,6 +22,11 @@ export const JobDetails = () => {
   // Track if user has applied natively on frontend as well to update UI immediately
   const [hasAppliedLocally, setHasAppliedLocally] = useState(false);
   const [applicationId, setApplicationId] = useState(null);
+
+  // Deletion state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -70,7 +78,27 @@ export const JobDetails = () => {
     }
   };
 
+  const handleDeleteJob = async () => {
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      const res = await deleteJob(jobId);
+      if (res.success) {
+        await refreshCompanyJobs();
+        navigate('/home');
+      } else {
+        setDeleteError(res.message || 'Failed to delete job.');
+      }
+    } catch (err) {
+      setDeleteError(err.response?.data?.message || 'An error occurred while deleting.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const isApplied = job?.hasApplied || hasAppliedLocally;
+  // Use _id for comparison since populated fields might have _id instead of id
+  const isOwner = user?.role === 'COMPANY' && user?.id === job?.user?._id;
 
   if (loading) {
     return (
@@ -100,8 +128,54 @@ export const JobDetails = () => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in duration-500">
+    <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in duration-500 relative">
       
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md p-6 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-6 h-6 text-red-500" />
+              </div>
+              <button 
+                onClick={() => setShowDeleteModal(false)}
+                className="text-zinc-500 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <h2 className="text-xl font-bold text-white mb-2">Delete Job Posting?</h2>
+            <p className="text-zinc-400 text-sm mb-6">
+              This action is permanent and cannot be undone. All associated applications will also be permanently deleted.
+            </p>
+
+            {deleteError && (
+              <div className="mb-6 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 px-4 py-3 rounded-xl text-zinc-300 bg-zinc-800 hover:bg-zinc-700 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDeleteJob}
+                disabled={isDeleting}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-white bg-red-500 hover:bg-red-600 transition-colors font-bold disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Job'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Back Button */}
       <button 
         onClick={() => navigate(-1)}
@@ -127,11 +201,16 @@ export const JobDetails = () => {
               </span>
             </div>
             
-            <div>
-              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">{job.title}</h1>
-              <div className="flex items-center gap-2 text-zinc-400 font-medium text-lg mb-4">
-                <Building2 className="w-5 h-5" />
-                {job.user?.name || 'Company Name'}
+            <div className="flex flex-col justify-center">
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">
+                {job.title}
+              </h1>
+              <div 
+                onClick={() => navigate(`/home/company/${job.user?._id}`)}
+                className="flex items-center gap-2 text-zinc-400 mb-4 cursor-pointer hover:text-emerald-500 transition-colors w-fit group"
+              >
+                <Building2 className="w-5 h-5 text-emerald-500 group-hover:scale-110 transition-transform" />
+                <span className="text-lg font-medium hover:underline">{job.user?.name || 'Company Name'}</span>
               </div>
               
               <div className="flex flex-wrap items-center gap-3">
@@ -251,6 +330,23 @@ export const JobDetails = () => {
                 </p>
               </div>
             </div>
+
+            {isOwner && (
+              <div className="pt-6 border-t border-zinc-800/50 flex flex-col gap-3">
+                <button 
+                  onClick={() => navigate(`/home/edit-job/${jobId}`)}
+                  className="w-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 border border-blue-500/20 px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                >
+                  <Edit2 className="w-4 h-4" /> Edit Job
+                </button>
+                <button 
+                  onClick={() => setShowDeleteModal(true)}
+                  className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" /> Delete Job
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
