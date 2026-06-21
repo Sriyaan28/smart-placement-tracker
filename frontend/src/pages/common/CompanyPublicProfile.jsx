@@ -88,51 +88,7 @@ export const CompanyPublicProfile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="w-full max-w-5xl mx-auto pb-20 pt-4 px-4 xl:px-8 animate-in fade-in duration-500">
-        <div className="w-24 h-8 bg-zinc-800/50 rounded-full animate-pulse mb-8" />
-        <div className="mb-8">
-          <div className="w-64 h-8 bg-zinc-800/50 rounded animate-pulse mb-2" />
-          <div className="w-48 h-4 bg-zinc-800/50 rounded animate-pulse" />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left Column Skeleton */}
-          <div className="md:col-span-1 space-y-6">
-            <div className="bg-zinc-900/40 border border-zinc-800 rounded-3xl p-6 flex flex-col items-center">
-              <div className="w-24 h-24 rounded-full bg-zinc-800/50 animate-pulse mb-4" />
-              <div className="w-32 h-6 bg-zinc-800/50 rounded animate-pulse mb-4" />
-              <div className="w-24 h-4 bg-zinc-800/50 rounded animate-pulse mb-4" />
-              <div className="w-full h-px bg-zinc-800 my-4" />
-              <div className="w-full space-y-4">
-                <div className="w-full h-5 bg-zinc-800/50 rounded animate-pulse" />
-                <div className="w-3/4 h-5 bg-zinc-800/50 rounded animate-pulse" />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column Skeleton */}
-          <div className="md:col-span-2 space-y-6">
-            <div className="bg-zinc-900/40 border border-zinc-800 rounded-3xl p-6 md:p-8">
-              <div className="w-32 h-6 bg-zinc-800/50 rounded animate-pulse mb-6" />
-              <div className="space-y-3">
-                <div className="w-full h-4 bg-zinc-800/50 rounded animate-pulse" />
-                <div className="w-full h-4 bg-zinc-800/50 rounded animate-pulse" />
-                <div className="w-5/6 h-4 bg-zinc-800/50 rounded animate-pulse" />
-              </div>
-            </div>
-
-            <div className="bg-zinc-900/40 border border-zinc-800 rounded-3xl p-6 md:p-8 overflow-hidden">
-              <div className="w-48 h-6 bg-zinc-800/50 rounded animate-pulse mb-6" />
-              <div className="flex gap-4">
-                <div className="w-72 h-48 bg-zinc-800/50 rounded-2xl animate-pulse shrink-0" />
-                <div className="w-72 h-48 bg-zinc-800/50 rounded-2xl animate-pulse shrink-0" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error || !profile) {
