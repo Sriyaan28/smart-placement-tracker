@@ -52,12 +52,11 @@ import { AdminReportDetails } from './pages/admin/AdminReportDetails';
 import { BlockedPage } from './pages/auth/BlockedPage';
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminHomeProvider } from './context/admin/AdminHomeContext';
-import { AdminReportsProvider } from './context/admin/AdminReportsContext';
 
 // Helper component to redirect logged-in users away from public pages
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return <Loading />;
   }
@@ -72,15 +71,15 @@ const PublicRoute = ({ children }) => {
 const DashboardRouter = () => {
   const { user } = useAuth();
   if (!user) return null;
-  
+
   if (user.role === 'STUDENT') {
     return <StudentLayout />;
   }
-  
+
   if (user.role === 'COMPANY') {
     return <CompanyLayout />;
   }
-  
+
   if (user.role === 'ADMIN') {
     return (
       <AdminHomeProvider>
@@ -90,7 +89,7 @@ const DashboardRouter = () => {
       </AdminHomeProvider>
     );
   }
-  
+
   return <Outlet />;
 };
 
@@ -102,7 +101,7 @@ function AppRoutes() {
           <LandingPage />
         </PublicRoute>
       } />
-      
+
       <Route path="/auth" element={
         <PublicRoute>
           <AuthPage />
@@ -118,7 +117,7 @@ function AppRoutes() {
           <Route index element={
             <RoleBasedHome />
           } />
-          
+
           <Route path="search" element={<RoleBasedSearch />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="report/:reportId" element={<AdminReportDetails />} />
@@ -127,7 +126,7 @@ function AppRoutes() {
           <Route path="applications/:id" element={<ApplicationDetails />} />
           <Route path="stats/:userId" element={<Stats />} />
           <Route path="profile" element={<ProfilePage />} />
-          
+
           {/* Company-specific routes mapped to the same layout */}
           <Route path="company-applications" element={<CompanyApplications />} />
           <Route path="company-application/:applicationId" element={<CompanyApplicationDetails />} />
