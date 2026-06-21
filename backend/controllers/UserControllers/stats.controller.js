@@ -23,7 +23,8 @@ export const getBasicStatsController = async (req, res) => {
             payload: {
                 userName: user.name,
                 githubUsername: user.githubUsername || null,
-                leetcodeUsername: user.leetcodeUsername || null
+                leetcodeUsername: user.leetcodeUsername || null,
+                isActive: user.isActive
             }
         });
 

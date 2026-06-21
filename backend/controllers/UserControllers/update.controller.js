@@ -5,9 +5,11 @@ export const updateProfileController = async (req, res) => {
 
         // companies and admins cant provide their leetcode and github profile
         if (req.user.role === "COMPANY" || req.user.role === "ADMIN") {
-            // skip update for leetcode, github and linkedin fields for companies and admins
             delete req.body.leetcodeUsername
             delete req.body.githubUsername
+        }
+        
+        if (req.user.role === "ADMIN") {
             delete req.body.linkedinUrl
         }
 

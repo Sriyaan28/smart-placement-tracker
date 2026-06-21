@@ -1,35 +1,58 @@
+// --- Core React & Router ---
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { LandingPage } from './pages/LandingPage';
-import { AuthPage } from './pages/AuthPage';
-import { HomePage } from './pages/HomePage';
-import { SearchJobs } from './pages/SearchJobs';
-import { JobDetails } from './pages/JobDetails';
-import { ApplicationDetails } from './pages/ApplicationDetails';
-import { MyApplications } from './pages/MyApplications';
-import { Stats } from './pages/Stats';
-import { ProfilePage } from './pages/ProfilePage';
-import { AuthProvider } from './context/AuthContext';
-import { JobsProvider } from './context/JobsContext';
-import { ApplicationsProvider } from './context/ApplicationsContext';
-import { StatsProvider } from './context/StatsContext';
-import { ProfileProvider } from './context/ProfileContext';
-import { CompanyProvider } from './context/CompanyContext';
-import { useAuth } from './hooks/useAuth';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { Loading } from './components/utils/Loading';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+
+// --- Context Providers ---
+import { AuthProvider } from './context/auth/AuthContext';
+import { JobsProvider } from './context/student/JobsContext';
+import { ApplicationsProvider } from './context/student/ApplicationsContext';
+import { StatsProvider } from './context/common/StatsContext';
+import { ProfileProvider } from './context/common/ProfileContext';
+import { CompanyProvider } from './context/company/CompanyContext';
+
+// --- Hooks & Shared Components ---
+import { useAuth } from './hooks/auth/useAuth';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { Loading } from './components/common/Loading';
+import { Placeholder } from './components/common/Placeholder';
+
+// --- Layouts ---
 import { StudentLayout } from './layouts/StudentLayout';
 import { CompanyLayout } from './layouts/CompanyLayout';
-import { Placeholder } from './components/utils/Placeholder';
-import { Outlet } from 'react-router-dom';
 
-// New Company Pages
-import { PostJob } from './pages/PostJob';
-import { EditJob } from './pages/EditJob';
-import { CompanyApplications } from './pages/CompanyApplications';
-import { CompanyApplicationDetails } from './pages/CompanyApplicationDetails';
-import { SearchStudents } from './pages/SearchStudents';
-import { CompanyPublicProfile } from './pages/CompanyPublicProfile';
+// --- Pages: Common & Public ---
+import { LandingPage } from './pages/common/LandingPage';
+import { HomePage } from './pages/common/HomePage';
+import { JobDetails } from './pages/common/JobDetails';
+import { Stats } from './pages/common/Stats';
+import { ProfilePage } from './pages/common/ProfilePage';
+import { CompanyPublicProfile } from './pages/common/CompanyPublicProfile';
+
+// --- Pages: Auth ---
+import { AuthPage } from './pages/auth/AuthPage';
+
+// --- Pages: Student ---
+import { SearchJobs } from './pages/student/SearchJobs';
+import { ApplicationDetails } from './pages/student/ApplicationDetails';
+import { MyApplications } from './pages/student/MyApplications';
+
+// --- Pages: Company ---
+import { PostJob } from './pages/company/PostJob';
+import { EditJob } from './pages/company/EditJob';
+import { CompanyApplications } from './pages/company/CompanyApplications';
+import { CompanyApplicationDetails } from './pages/company/CompanyApplicationDetails';
+import { SearchStudents } from './pages/company/SearchStudents';
+
+// --- Pages: Admin ---
+import { AdminHome } from './pages/admin/AdminHome';
+import { AdminSearch } from './pages/admin/AdminSearch';
+import { AdminReports } from './pages/admin/AdminReports';
+import { AdminReportDetails } from './pages/admin/AdminReportDetails';
+
+import { BlockedPage } from './pages/auth/BlockedPage';
+import { AdminLayout } from './layouts/AdminLayout';
+import { AdminHomeProvider } from './context/admin/AdminHomeContext';
+import { AdminReportsProvider } from './context/admin/AdminReportsContext';
 
 // Helper component to redirect logged-in users away from public pages
 const PublicRoute = ({ children }) => {
@@ -58,7 +81,16 @@ const DashboardRouter = () => {
     return <CompanyLayout />;
   }
   
-  // Fallback for other roles (Admin)
+  if (user.role === 'ADMIN') {
+    return (
+      <AdminHomeProvider>
+        <AdminReportsProvider>
+          <AdminLayout />
+        </AdminReportsProvider>
+      </AdminHomeProvider>
+    );
+  }
+  
   return <Outlet />;
 };
 
@@ -77,11 +109,19 @@ function AppRoutes() {
         </PublicRoute>
       } />
 
+      <Route path="/blocked" element={<BlockedPage />} />
+
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<DashboardRouter />}>
-          <Route index element={<HomePage />} />
-          <Route path="search" element={<SearchJobs />} />
+          {/* Default Index Route - will render role-specific home page inside the Layout */}
+          <Route index element={
+            <RoleBasedHome />
+          } />
+          
+          <Route path="search" element={<RoleBasedSearch />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="report/:reportId" element={<AdminReportDetails />} />
           <Route path="job/:jobId" element={<JobDetails />} />
           <Route path="applications" element={<MyApplications />} />
           <Route path="applications/:id" element={<ApplicationDetails />} />
@@ -100,6 +140,20 @@ function AppRoutes() {
     </Routes>
   );
 }
+
+// Helper component for Role-based Home routing
+const RoleBasedHome = () => {
+  const { user } = useAuth();
+  if (user?.role === 'ADMIN') return <AdminHome />;
+  return <HomePage />;
+};
+
+// Helper component for Role-based Search routing
+const RoleBasedSearch = () => {
+  const { user } = useAuth();
+  if (user?.role === 'ADMIN') return <AdminSearch />;
+  return <SearchJobs />;
+};
 
 function App() {
   return (

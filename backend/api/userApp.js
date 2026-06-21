@@ -6,6 +6,10 @@ import { searchController } from "../controllers/UserControllers/search.controll
 import { updateProfileController } from "../controllers/UserControllers/update.controller.js";
 import { getBasicStatsController, getResumeStatsController, getLeetcodeStatsController, getGithubStatsController } from "../controllers/UserControllers/stats.controller.js";
 import { toggleBlockUserController } from "../controllers/UserControllers/toggleBlock.controller.js";
+import { toggleVerifiedUserController } from "../controllers/UserControllers/toggleVerified.controller.js";
+import { adminSearchController } from "../controllers/UserControllers/adminSearch.controller.js";
+import { getCompanyAnalyticsController } from "../controllers/UserControllers/companyAnalytics.controller.js";
+import { getJobAnalyticsController } from "../controllers/UserControllers/jobAnalytics.controller.js";
 
 export const userApp = exp.Router();
 
@@ -21,6 +25,15 @@ userApp.get("/users", verifyToken, getAllProfilesController)
 // Route to search user by name(using regex)
 userApp.get("/search/:query", verifyToken, searchController)
 
+// Admin search route
+userApp.get("/admin-search/:query", verifyToken, checkAccess("ADMIN"), adminSearchController)
+
+// Admin company analytics route
+userApp.get("/admin/company-analytics/:id", verifyToken, checkAccess("ADMIN"), getCompanyAnalyticsController)
+
+// Admin job analytics route
+userApp.get("/admin/job-analytics/:jobId", verifyToken, checkAccess("ADMIN"), getJobAnalyticsController)
+
 // Route to update profile
 userApp.put("/profile", verifyToken, updateProfileController)
 
@@ -32,3 +45,6 @@ userApp.get("/stats/:userId/github", verifyToken, getGithubStatsController)
 
 // Route to toggle block user (ADMIN)
 userApp.put("/toggle-block/:userId", verifyToken, checkAccess("ADMIN"), toggleBlockUserController)
+
+// Route to toggle user verified status (ADMIN)
+userApp.put("/toggle-verified/:userId", verifyToken, checkAccess("ADMIN"), toggleVerifiedUserController)

@@ -9,6 +9,7 @@ import { resumeApp } from "./api/resumeApp.js"
 import { companyApp } from "./api/companyApp.js"
 import { jobApp } from "./api/jobApp.js"
 import { notificationApp } from "./api/notificationApp.js"
+import { reportApp } from "./api/reportApp.js"
 
 // load env variables
 dotenv.config()
@@ -71,6 +72,7 @@ app.use("/api/resume", resumeApp)
 app.use("/api/company", companyApp)
 app.use("/api/job", jobApp)
 app.use("/api/notification", notificationApp)
+app.use("/api/report", reportApp)
 
 // =====================================================
 // ERROR HANDLER

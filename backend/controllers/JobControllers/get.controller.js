@@ -9,7 +9,7 @@ export const getJobController = async (req, res) => {
             return res.status(400).json({ success: false, message: "Please enter job id" })
         }
         
-        const job = await JobModel.findById(jobId).populate("user", "name userProfile")
+        const job = await JobModel.findById(jobId).populate("user", "name userProfile isVerified")
         if (!job) {
             return res.status(404).json({ success: false, message: "Job not found" })
         }

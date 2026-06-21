@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Home, Search, FileText, BarChart2, User, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/auth/useAuth';
 
 export const StudentLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);

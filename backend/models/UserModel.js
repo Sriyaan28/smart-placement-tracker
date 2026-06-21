@@ -36,6 +36,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     userProfile: {
         type: String,
         default: "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740&q=80"
@@ -51,7 +55,7 @@ const userSchema = new Schema({
     linkedinUrl: {
         type: String,
         trim: true,
-        match: [/^https:\/\/(www\.)?linkedin\.com\/in\/.*$/, "Please enter a valid LinkedIn URL"]
+        match: [/^https:\/\/(www\.)?linkedin\.com\/(in|company)\/.*$/, "Please enter a valid LinkedIn URL"]
     }
 }, {
     timestamps: true,

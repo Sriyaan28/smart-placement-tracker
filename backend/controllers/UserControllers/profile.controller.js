@@ -27,8 +27,11 @@ export const getProfileController = async (req, res) => {
 // CONTROLLER TO GET ALL USER'S PROFILES
 export const getAllProfilesController = async (req, res) => {
     try {
-        // get all users from db (non-admin)
-        let users = await UserModel.find({ role: { $ne: "ADMIN" } }).select("-password")
+        // get all users from db (non-admin) lightweight and sorted by newest
+        let users = await UserModel.find({ role: { $ne: "ADMIN" } })
+            .select("name email role isActive isVerified userProfile createdAt")
+            .sort({ createdAt: -1 })
+            .lean();
 
         // remove the current user from users
         users = users.filter((user) => user._id.toString() !== req.user.id.toString())
@@ -58,7 +61,7 @@ export const getCompanyPublicProfileController = async (req, res) => {
         }
 
         const profile = await UserModel.findOne({ _id: companyId, role: "COMPANY" })
-            .select("name email bio linkedinUrl userProfile role");
+            .select("name email bio linkedinUrl userProfile role isVerified isActive");
             
         if (!profile) {
             return res.status(404).json({ success: false, message: "Company not found" });

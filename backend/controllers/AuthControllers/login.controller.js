@@ -30,7 +30,7 @@ export const loginController = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid password" })
         }
         if (!user.isActive) {
-            return res.status(403).json({ success: false, message: "Account is inactive" })
+            return res.status(403).json({ success: false, message: "Account is inactive. Please contact administrator.", isBlocked: true })
         }
         // sign jwt token
         const token = sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" })

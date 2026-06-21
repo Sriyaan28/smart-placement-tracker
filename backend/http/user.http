@@ -26,3 +26,11 @@ Content-Type: application/json
 
 ### GET USER CODING STATS
 GET http://localhost:4000/api/user/stats/6a2d2ce5d80a3b402095f81d
+
+### TOGGLE BLOCK USER (ADMIN ONLY)
+PUT http://localhost:4000/api/user/toggle-block/YOUR_USER_ID_HERE
+Content-Type: application/json
+
+### TOGGLE VERIFIED STATUS (ADMIN ONLY)
+PUT http://localhost:4000/api/user/toggle-verified/6a2e52c7202d47be0392c1e0
+Content-Type: application/json

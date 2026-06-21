@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import { login } from '../../api/authApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/auth/useAuth';
 
 export const Login = () => {
   const [searchParams] = useSearchParams();
@@ -31,7 +31,11 @@ export const Login = () => {
         navigate('/home');
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      if (err.response?.data?.isBlocked) {
+        window.location.href = '/blocked';
+      } else {
+        setError(err.response?.data?.message || "Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

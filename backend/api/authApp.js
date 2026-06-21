@@ -50,6 +50,10 @@ authApp.get("/me", verifyToken, async (req, res) => {
             return res.status(404).json({ success: false, message: "User not found" });
         }
         
+        if (!user.isActive) {
+            return res.status(403).json({ success: false, message: "Account is inactive. Please contact administrator.", isBlocked: true })
+        }
+        
         // Return structured user data to match what the frontend expects
         return res.status(200).json({ 
             success: true, 
